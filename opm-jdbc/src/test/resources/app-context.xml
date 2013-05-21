@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="oraclePersistenceManager" class="org.fl.opm.jdbc.SqlPersistenceManager">
+        <property name="sqlExecutor" ref="oracleSqlExecutor"/>
+    </bean>
+    <bean id="oracleSqlExecutor" class="org.fl.opm.jdbc.spring.JdbcTemplateExecutor">
+        <property name="dataSource" ref="oracleDataSource"/>
+    </bean>
+
+    <bean id="sqlServerPersistenceManager" class="org.fl.opm.jdbc.SqlPersistenceManager">
+        <property name="sqlExecutor" ref="sqlServerSqlExecutor"/>
+    </bean>
+    <bean id="sqlServerSqlExecutor" class="org.fl.opm.jdbc.spring.JdbcTemplateExecutor">
+        <property name="dataSource" ref="sqlServerDataSource"/>
+    </bean>
+
+    <bean id="oracleDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <property name="url" value="jdbc:oracle:thin:@oracle.sdptest.shengpay.com:1521:sndapay"/>
+        <property name="username" value="poss_poster_user"/>
+        <property name="password" value="poss_poster_user"/>
+
+        <property name="maxActive" value="20"/>
+        <property name="maxWait" value="60000"/>
+        <property name="minIdle" value="1"/>
+
+        <property name="timeBetweenEvictionRunsMillis" value="3000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+
+        <property name="validationQuery" value="SELECT 'x' from dual"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+    </bean>
+
+    <bean id="sqlServerDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <property name="url" value="jdbc:sqlserver://sqlserver.sdptest.shengpay.com:1433;DatabaseName=UnifiedPay"/>
+        <property name="username" value="UnifiedPayUser2"/>
+        <property name="password" value="unifiedpayuser"/>
+
+        <property name="maxActive" value="20"/>
+        <property name="maxWait" value="60000"/>
+        <property name="minIdle" value="1"/>
+
+        <property name="timeBetweenEvictionRunsMillis" value="3000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+    </bean>
+
+</beans>

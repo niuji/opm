@@ -1,0 +1,48 @@
+allprojects {
+    apply plugin: 'maven'
+    group = 'org.fl.opm'
+    version = '1.0.0-SNAPSHOT'
+
+    task deploy(dependsOn: 'uploadArchives') {
+    }
+
+}
+
+subprojects {
+    apply plugin: 'java'
+    compileJava.options.encoding = 'UTF-8'
+
+    configurations {
+        providedCompile
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        mavenRepo url: "http://nexus.shengpaydev.com/content/groups/public"
+    }
+
+    dependencies {
+        testCompile "junit:junit:4.11"
+    }
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
+    sourceSets {
+        main.compileClasspath += configurations.providedCompile
+        test.compileClasspath += configurations.providedCompile
+        test.runtimeClasspath += configurations.providedCompile
+        println sourceSets.main
+    }
+
+    task srcJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.java
+        from sourceSets.main.resources
+    }
+
+    artifacts {
+        archives srcJar
+    }
+}
