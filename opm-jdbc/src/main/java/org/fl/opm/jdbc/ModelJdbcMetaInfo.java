@@ -156,8 +156,9 @@ public class ModelJdbcMetaInfo<T> {
     }
 
     private String getTableName(Class<T> modelClass) throws Exception {
-        Entity entity = modelClass.getAnnotation(Entity.class);
-        Table table = modelClass.getAnnotation(Table.class);
+        Class<?> entityClass = ReflectionUtils.findAnnotatedClass(modelClass, Entity.class);
+        Entity entity = entityClass.getAnnotation(Entity.class);
+        Table table = entityClass.getAnnotation(Table.class);
         if (entity == null && table == null) {
             throw new Exception("Not a entity instance.");
         }

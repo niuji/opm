@@ -88,11 +88,15 @@ public class JdbcUtils {
     }
 
     public static void setParam(PreparedStatement ps, int i, Object param) throws SQLException {
-        ColumnHandler<?> ch = handlers.get(param.getClass());
-        if (ch != null) {
-            ch.setParam(ps, i, param);
+        if (param == null) {
+            ps.setNull(i, ps.getMetaData().getColumnType(i));
         } else {
-            ps.setObject(i, param);
+            ColumnHandler<?> ch = handlers.get(param.getClass());
+            if (ch != null) {
+                ch.setParam(ps, i, param);
+            } else {
+                ps.setObject(i, param);
+            }
         }
     }
 

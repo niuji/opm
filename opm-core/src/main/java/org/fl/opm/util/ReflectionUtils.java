@@ -41,6 +41,25 @@ public class ReflectionUtils {
         return list;
     }
 
+    /**
+     *
+     * @param clz
+     * @param annotationClass
+     * @return
+     */
+    public static Class<?> findAnnotatedClass(Class<?> clz, Class<? extends Annotation> annotationClass){
+        if(annotationClass == null){
+            return null;
+        }
+        do {
+            Annotation annotation = clz.getAnnotation(annotationClass);
+            if(annotation != null){
+                return clz;
+            }
+        } while ((clz = clz.getSuperclass()) != Object.class);
+        return null;
+    }
+
     public static Object getFieldValue(Object obj, Field field) throws Exception {
         try {
             field.setAccessible(true);

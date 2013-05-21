@@ -13,11 +13,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: jiangyixin.stephen
- * Date: 13-5-3
- * Time: 下午4:50
- * To change this template use File | Settings | File Templates.
+ * Date: 2013-05-21 14:34
  */
 public class SqlPersistenceManager implements PersistenceManager {
     private SqlExecutor sqlExecutor;

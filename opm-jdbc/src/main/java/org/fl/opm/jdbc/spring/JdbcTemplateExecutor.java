@@ -4,6 +4,8 @@ import org.fl.opm.jdbc.SqlExecutor;
 import org.fl.opm.jdbc.util.JdbcUtils;
 import org.fl.opm.util.ArrayUtils;
 import org.fl.opm.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,6 +24,8 @@ import java.util.Map;
  * Date: 2013-05-15 13:50
  */
 public class JdbcTemplateExecutor implements SqlExecutor {
+    private static Logger logger = LoggerFactory.getLogger(JdbcTemplateExecutor.class);
+
     private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
@@ -30,6 +34,9 @@ public class JdbcTemplateExecutor implements SqlExecutor {
 
     @Override
     public Map<String, Object> insert(final String sql, final List<Object> params, final List<String> primaryKeys) throws Exception {
+        if(logger.isDebugEnabled()){
+            logger.debug("SQL: [{}], Params:[{}]", sql, params);
+        }
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 new PreparedStatementCreator() {
@@ -49,29 +56,44 @@ public class JdbcTemplateExecutor implements SqlExecutor {
 
     @Override
     public <T> T findById(Class<T> modelClass, String sql, Object id) throws Exception {
+        if(logger.isDebugEnabled()){
+            logger.debug("SQL: [{}], Params:[{}]", sql, id);
+        }
         return (T) jdbcTemplate.queryForObject(sql, toArgs(id), new ModelRowMapper<T>(modelClass));
     }
 
     @Override
     public int deleteById(String sql, Object id) throws Exception {
+        if(logger.isDebugEnabled()){
+            logger.debug("SQL: [{}], Params:[{}]", sql, id);
+        }
         return jdbcTemplate.update(sql, toArgs(id));
     }
 
     @Override
     public <T> List<T> findBySql(String sql, Object[] params, int[] types, Class<T> modelClass) throws Exception {
+        if(logger.isDebugEnabled()){
+            logger.debug("SQL: [{}], Params:[{}]", sql, params);
+        }
         return jdbcTemplate.<T>query(sql, params, types, new ModelRowMapper<T>(modelClass));
     }
 
     @Override
     public List<Object[]> findBySql(String sql, Object[] params, int[] types) throws Exception {
+        if(logger.isDebugEnabled()){
+            logger.debug("SQL: [{}], Params:[{}]", sql, params);
+        }
         return jdbcTemplate.query(sql, params, types, ObjectArrayRowMapper.getShareInstance());
     }
 
     @Override
-    public int updateById(String updateByIdSql, List<Object> updateColVals, Object id) throws Exception {
+    public int updateById(String sql, List<Object> updateColVals, Object id) throws Exception {
+        if(logger.isDebugEnabled()){
+            logger.debug("SQL: [{}], Params:[{}], ID:[{}]", sql, updateColVals);
+        }
         Object[] values = ArrayUtils.union(updateColVals.toArray(), toArgs(id));
         int[] types = JdbcUtils.translateJdbcTypes(values);
-        return jdbcTemplate.update(updateByIdSql, values, types);
+        return jdbcTemplate.update(sql, values, types);
     }
 
     private Object[] toArgs(Object param) {
