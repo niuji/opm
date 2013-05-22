@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 /**
- *
  * User: jiangyixin.stephen
  * Date: 2013-05-21 10:35
  */
@@ -34,6 +33,10 @@ public class StringHandler implements ColumnHandler<String> {
 
     @Override
     public void setParam(PreparedStatement ps, int i, Object param) throws SQLException {
-        ps.setString(i, (String)param);
+        if (param == null) {
+            ps.setNull(i, getJdbcType());
+        } else {
+            ps.setString(i, (String) param);
+        }
     }
 }

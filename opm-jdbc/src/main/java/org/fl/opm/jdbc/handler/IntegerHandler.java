@@ -8,11 +8,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: jiangyixin.stephen
- * Date: 13-5-7
- * Time: 下午5:13
- * To change this template use File | Settings | File Templates.
+ * Date: 2013-05-22 14:02
  */
 public class IntegerHandler implements ColumnHandler<Integer> {
     @Override
@@ -27,6 +25,10 @@ public class IntegerHandler implements ColumnHandler<Integer> {
 
     @Override
     public void setParam(PreparedStatement ps, int i, Object param) throws SQLException {
-        ps.setInt(i, (Integer)param);
+        if (param == null) {
+            ps.setNull(i, getJdbcType());
+        } else {
+            ps.setInt(i, (Integer) param);
+        }
     }
 }

@@ -25,6 +25,10 @@ public class DateHandler implements ColumnHandler<Date> {
 
     @Override
     public void setParam(PreparedStatement ps, int i, Object param) throws SQLException {
-        ps.setTimestamp(i, new Timestamp(((Date)param).getTime()));
+        if (param == null) {
+            ps.setNull(i, getJdbcType());
+        } else {
+            ps.setTimestamp(i, new Timestamp(((Date) param).getTime()));
+        }
     }
 }

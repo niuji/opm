@@ -1,6 +1,7 @@
 package org.fl.opm.jdbc.util;
 
 import org.fl.opm.jdbc.ColumnHandler;
+import org.fl.opm.jdbc.FieldWrapper;
 import org.fl.opm.jdbc.handler.*;
 import org.fl.opm.util.CastUtils;
 
@@ -67,17 +68,6 @@ public class JdbcUtils {
         }
     }
 
-    public static int[] translateJdbcTypes(Object[] values) {
-        if (values == null) {
-            return null;
-        }
-        int[] types = new int[values.length];
-        for (int i = 0; i < values.length; i++) {
-            types[i] = javaTypeToJdbcType(values[i].getClass());
-        }
-        return types;
-    }
-
     public static int javaTypeToJdbcType(Class<?> clz) {
         ColumnHandler<?> ch = handlers.get(clz);
         if (ch != null) {
@@ -87,16 +77,12 @@ public class JdbcUtils {
         }
     }
 
-    public static void setParam(PreparedStatement ps, int i, Object param) throws SQLException {
-        if (param == null) {
-            ps.setNull(i, ps.getMetaData().getColumnType(i));
+    public static void setParam(PreparedStatement ps, int i, FieldWrapper param) throws Exception {
+        ColumnHandler<?> ch = handlers.get(param.getFieldType());
+        if (ch != null) {
+            ch.setParam(ps, i, param.getFieldValue());
         } else {
-            ColumnHandler<?> ch = handlers.get(param.getClass());
-            if (ch != null) {
-                ch.setParam(ps, i, param);
-            } else {
-                ps.setObject(i, param);
-            }
+            ps.setObject(i, param.getFieldValue());
         }
     }
 

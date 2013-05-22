@@ -28,6 +28,10 @@ public class BigDecimalHandler implements ColumnHandler<BigDecimal> {
 
     @Override
     public void setParam(PreparedStatement ps, int i, Object param) throws SQLException {
-        ps.setBigDecimal(i, (BigDecimal)param);
+        if (param == null) {
+            ps.setNull(i, getJdbcType());
+        } else {
+            ps.setBigDecimal(i, (BigDecimal) param);
+        }
     }
 }

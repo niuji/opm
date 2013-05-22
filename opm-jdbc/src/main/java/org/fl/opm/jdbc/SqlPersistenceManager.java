@@ -97,7 +97,7 @@ public class SqlPersistenceManager implements PersistenceManager {
 
     @Override
     public <T> int deleteBySpec(Class<T> modelClass, Spec spec) throws Exception {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new Exception("not implemented yet.");
     }
 
     private void notNull(Object obj, String msg) throws Exception {

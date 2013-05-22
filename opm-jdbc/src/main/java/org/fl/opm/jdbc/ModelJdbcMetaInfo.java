@@ -78,28 +78,23 @@ public class ModelJdbcMetaInfo<T> {
         return update + " where " + getPrimaryKeysConditionSql();
     }
 
-    public List<Object> buildUpdateParams(T model) throws Exception {
-        List<Object> result = new ArrayList<Object>();
+    public List<FieldWrapper> buildUpdateParams(T model) throws Exception {
+        List<FieldWrapper> result = new ArrayList<FieldWrapper>();
         for (Field col : cols) {
             if (!isPrimaryKey(col)) {
-                result.add(ReflectionUtils.getFieldValue(model, col));
+                result.add(new FieldWrapper(col, model));
             }
         }
         return result;
     }
 
-    public Object buildPrimaryKeyParams(T model) throws Exception {
-        if (primaryKeys.size() == 1) {
-            return ReflectionUtils.getFieldValue(model, primaryKeys.get(0));
-        } else {
-            Object[] result = new Object[primaryKeys.size()];
-            int i = 0;
-            for (Field pk : primaryKeys) {
-                result[i] = ReflectionUtils.getFieldValue(model, pk);
-                i++;
-            }
-            return result;
+    public FieldWrapper[] buildPrimaryKeyParams(T model) throws Exception {
+        FieldWrapper[] result = new FieldWrapper[primaryKeys.size()];
+        int i = 0;
+        for (Field pk : primaryKeys) {
+            result[i++] = new FieldWrapper(pk, model);
         }
+        return result;
     }
 
     public boolean isPrimaryKey(Field col) {
@@ -128,17 +123,17 @@ public class ModelJdbcMetaInfo<T> {
         return "insert into " + tableName + " (" + colStr.substring(1) + ") values (" + valStr.substring(1) + ")";
     }
 
-    public <T> List<Object> buildInsertParams(T model) throws Exception {
-        List<Object> result = new ArrayList<Object>();
+    public <T> List<FieldWrapper> buildInsertParams(T model) throws Exception {
+        List<FieldWrapper> result = new ArrayList<FieldWrapper>();
         for (Field pk : primaryKeys) {
             GeneratedValue gv = pk.getAnnotation(GeneratedValue.class);
             if (gv == null || !GenerationType.IDENTITY.equals(gv.strategy())) {
-                result.add(ReflectionUtils.getFieldValue(model, pk));
+                result.add(new FieldWrapper(pk, model));
             }
         }
         for (Field col : cols) {
             if (!isPrimaryKey(col)) {
-                result.add(ReflectionUtils.getFieldValue(model, col));
+                result.add(new FieldWrapper(col, model));
             }
         }
         return result;

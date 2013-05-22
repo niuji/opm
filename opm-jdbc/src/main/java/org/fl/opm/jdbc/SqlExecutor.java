@@ -11,13 +11,13 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public interface SqlExecutor {
-    Map<String, Object> insert(String sql, List<Object> params, List<String> primaryKeys) throws Exception;
+    Map<String, Object> insert(String sql, List<FieldWrapper> params, List<String> primaryKeys) throws Exception;
 
     <T> T findById(Class<T> modelClass, String queryByIdSql, Object id) throws Exception;
 
     int deleteById(String deleteByIdSql, Object id) throws Exception;
 
-    int updateById(String updateByIdSql, List<Object> updateColVals, Object id) throws Exception;
+    int updateById(String updateByIdSql, List<FieldWrapper> updateColVals, FieldWrapper[] ids) throws Exception;
 
     <T> List<T> findBySql(String sql, Object[] params, int[] types, Class<T> modelClass) throws Exception;
 

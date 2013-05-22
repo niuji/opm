@@ -27,6 +27,10 @@ public class LongHandler implements ColumnHandler<Long> {
 
     @Override
     public void setParam(PreparedStatement ps, int i, Object param) throws SQLException {
-        ps.setLong(i, (Long)param);
+        if (param == null) {
+            ps.setNull(i, getJdbcType());
+        } else {
+            ps.setLong(i, (Long) param);
+        }
     }
 }
