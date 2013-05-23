@@ -7,7 +7,7 @@ import org.fl.opm.spec.enums.Relation;
  * Date: 2013-05-20 11:10
  */
 public class AndCriteria extends RelationCriteria {
-    private AndCriteria(){
+    private AndCriteria() {
         super(Relation.AND);
     }
 
@@ -16,6 +16,5 @@ public class AndCriteria extends RelationCriteria {
         add(c1);
         add(c2);
     }
-
 
 }

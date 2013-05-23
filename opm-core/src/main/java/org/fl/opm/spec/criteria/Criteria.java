@@ -17,13 +17,21 @@ public class Criteria {
         return new Criteria();
     }
 
-    public void and(String name, Symbol symbol, Object val, Object type) throws Exception {
+    public Criteria and(String name, Symbol symbol, Object val, Object type) throws Exception {
         Criteria sc = new SimpleCriteria(name, symbol, val, type);
         if(root != null){
             root = new AndCriteria(root, sc);
         } else{
             root = sc;
         }
+        return this;
     }
 
+    public boolean isEmpty(){
+        return root == null || root.isEmpty();
+    }
+
+    public Criteria getRoot() {
+        return root;
+    }
 }

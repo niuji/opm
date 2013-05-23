@@ -20,4 +20,26 @@ public class SimpleCriteria extends Criteria {
         this.value = value;
         this.type = type;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Symbol getSymbol() {
+        return symbol;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public Object getType() {
+        return type;
+    }
+
+    @Override
+    public boolean isEmpty(){
+        return false;
+    }
+
 }

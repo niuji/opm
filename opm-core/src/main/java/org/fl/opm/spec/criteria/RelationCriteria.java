@@ -28,4 +28,10 @@ public class RelationCriteria extends Criteria {
     public List<Criteria> getCriterias(){
         return criterias;
     }
+
+    @Override
+    public boolean isEmpty(){
+        return false;
+    }
+
 }

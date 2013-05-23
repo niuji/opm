@@ -5,5 +5,5 @@ package org.fl.opm.spec.enums;
  * Date: 2013-05-20 10:37
  */
 public enum Symbol {
-    EQUAL
+    ISNULL, EQUAL
 }

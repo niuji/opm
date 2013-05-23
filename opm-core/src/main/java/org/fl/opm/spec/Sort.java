@@ -21,4 +21,7 @@ public class Sort {
         return this;
     }
 
+    public List<SortDefinition> getSortDefinitions(){
+        return sortDefinitions;
+    }
 }

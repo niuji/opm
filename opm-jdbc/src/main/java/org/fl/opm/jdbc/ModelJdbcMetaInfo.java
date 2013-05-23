@@ -12,11 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: jiangyixin.stephen
- * Date: 13-5-3
- * Time: 下午5:55
- * To change this template use File | Settings | File Templates.
+ * Date: 2013-05-22 17:58
  */
 public class ModelJdbcMetaInfo<T> {
     protected final List<Field> cols;
@@ -204,5 +202,9 @@ public class ModelJdbcMetaInfo<T> {
 
     public Map<String, Field> getFieldMapping() {
         return fieldMapping;
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 }
