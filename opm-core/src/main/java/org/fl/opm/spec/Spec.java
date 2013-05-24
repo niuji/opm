@@ -59,6 +59,10 @@ public abstract class Spec<T> {
         return pm.findBySpec(this);
     }
 
+    public Class<T> getModelClass(){
+        return modelClass;
+    }
+
     private void ensureSort() {
         if(sort == null){
             sort = new Sort();

@@ -8,11 +8,11 @@ import org.fl.opm.spec.criteria.Criteria;
  */
 public class CriteriaTranslater implements SqlCriteriaTranslater<Criteria> {
     @Override
-    public String translate(Criteria criteria) throws Exception {
+    public String translate(Criteria criteria, JdbcParamterHolder jph) throws Exception {
         if(criteria == null || criteria.isEmpty()){
             return "";
         }else{
-            return SqlCriteriaTranslaters.toWhereSql(criteria.getRoot());
+            return SqlCriteriaTranslaters.toWhereSql(criteria.getRoot(), jph);
         }
     }
 }

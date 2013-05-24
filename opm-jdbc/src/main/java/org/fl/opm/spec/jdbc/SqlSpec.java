@@ -56,7 +56,7 @@ public class SqlSpec<T> extends Spec<T> {
         if (val != null) {
             ModelJdbcMetaInfo metaInfo = MetaInfoHolder.getMetaInfo(modelClass);
             Field field = (Field) metaInfo.getFieldMapping().get(fieldName);
-            criteria.and(DbNameUtils.getColName(field), Symbol.EQUAL, val, JdbcUtils.javaTypeToJdbcType(field.getClass()));
+            criteria.and(DbNameUtils.getColName(field), Symbol.EQUAL, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
         }
         return this;
     }
@@ -80,7 +80,14 @@ public class SqlSpec<T> extends Spec<T> {
         }
     }
 
-    public String getSql(SqlDialect dialet) throws Exception {
+    /**
+     * 将criteria转换成执行jdbc必须的参数：sql, parameters, jdbc types
+     * @param dialet
+     * @return
+     * @throws Exception
+     */
+    public JdbcParamterHolder getJdbcParamter(SqlDialect dialet) throws Exception {
+        JdbcParamterHolder jph = new JdbcParamterHolder();
         StringBuilder sb = new StringBuilder("select ");
         if (StringUtils.isNotBlank(selectCol)) {
             sb.append(selectCol);
@@ -89,7 +96,7 @@ public class SqlSpec<T> extends Spec<T> {
         }
         sb.append(" from ").append(MetaInfoHolder.getMetaInfo(modelClass).getTableName());
         if (!criteria.isEmpty()) {
-            sb.append(" where ").append(SqlCriteriaTranslaters.toWhereSql(criteria.getRoot()));
+            sb.append(" where ").append(SqlCriteriaTranslaters.toWhereSql(criteria.getRoot(), jph));
         }
         if (limit != null) {
             sb = new StringBuilder(dialet.rangedSql(sb.toString(), limit.getStart(), limit.getEnd() - limit.getStart()));
@@ -97,7 +104,12 @@ public class SqlSpec<T> extends Spec<T> {
         if (sort != null && CollectionUtils.isNotEmpty(sort.getSortDefinitions())) {
             sb.append(" order by ").append(generateOrderBySql(sort));
         }
-        return sb.toString();
+        jph.setSql(sb.toString());
+        return jph;
+    }
+
+    public boolean isSelectByModel(){
+        return selectCol == null;
     }
 
     private String generateOrderBySql(Sort sort) {

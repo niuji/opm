@@ -1,7 +1,7 @@
 allprojects {
     apply plugin: 'maven'
     group = 'org.fl.opm'
-    version = '1.0.3-SNAPSHOT'
+    version = '1.0.5-SNAPSHOT'
 
     task deploy(dependsOn: 'uploadArchives') {
     }
@@ -26,8 +26,8 @@ subprojects {
         testCompile "junit:junit:4.11"
     }
 
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
 
     sourceSets {
         main.compileClasspath += configurations.providedCompile

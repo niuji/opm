@@ -6,6 +6,7 @@ import org.fl.opm.jdbc.util.JdbcUtils;
 import org.fl.opm.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -63,7 +64,11 @@ public class JdbcTemplateExecutor implements SqlExecutor {
         if (logger.isDebugEnabled()) {
             logger.debug("SQL: [{}], Params:[{}]", sql, id);
         }
-        return (T) jdbcTemplate.queryForObject(sql, toArgs(id), new ModelRowMapper<T>(modelClass));
+        try {
+            return (T) jdbcTemplate.queryForObject(sql, toArgs(id), new ModelRowMapper<T>(modelClass));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override

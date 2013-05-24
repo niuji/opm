@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface PersistenceManager {
     /**
-     * 保存实体
+     * 保存/更新实体
      *
      * @param model
      * @param <T>
@@ -30,15 +30,6 @@ public interface PersistenceManager {
      * @return
      */
     public <T> T findById(Class<T> modelClass, Object id) throws Exception;
-
-    /**
-     * 根据主键ID更新对象
-     *
-     * @param model
-     * @param <T>
-     * @return
-     */
-    public <T> int updateById(T model) throws Exception;
 
     /**
      * 根据主键ID删除对象

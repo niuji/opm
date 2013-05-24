@@ -12,6 +12,6 @@ public class SqlCriteriaTranslatersTest {
     @Test
     public void toWhereSqlTest() throws Exception {
         Criteria c = Criteria.emptyCriteria().and("aaa", Symbol.EQUAL, "ff", 1).and("bbb", Symbol.ISNULL, null, null);
-        System.out.printf("%s", SqlCriteriaTranslaters.toWhereSql(c));
+        System.out.printf("%s", SqlCriteriaTranslaters.toWhereSql(c, new JdbcParamterHolder()));
     }
 }

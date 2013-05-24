@@ -13,11 +13,11 @@ import java.util.Map;
  */
 public class SqlCriteriaTranslaters {
     private static Map<Class<? extends Criteria>, SqlCriteriaTranslater> translaterMap = new HashMap<Class<? extends Criteria>, SqlCriteriaTranslater>();
-    public static String toWhereSql(Criteria criteria) throws Exception {
+    public static String toWhereSql(Criteria criteria, JdbcParamterHolder jph) throws Exception {
         if(criteria == null || criteria.isEmpty()){
             return "";
         }else{
-            return getSqlCriteriaTranslater(criteria).translate(criteria);
+            return getSqlCriteriaTranslater(criteria).translate(criteria, jph);
         }
     }
 

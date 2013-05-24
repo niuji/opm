@@ -9,7 +9,8 @@ import org.fl.opm.spec.enums.Symbol;
  */
 public class SimpleCriteriaTranslater implements SqlCriteriaTranslater<SimpleCriteria> {
     @Override
-    public String translate(SimpleCriteria criteria) throws Exception {
+    public String translate(SimpleCriteria criteria, JdbcParamterHolder jph) throws Exception {
+        jph.addParam(criteria.getValue(), (Integer)criteria.getType());
         return criteria.getName() + symbolString(criteria.getSymbol());
     }
 

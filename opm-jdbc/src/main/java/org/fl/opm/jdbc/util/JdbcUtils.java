@@ -15,11 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: jiangyixin.stephen
- * Date: 13-5-6
- * Time: 下午2:18
- * To change this template use File | Settings | File Templates.
+ * Date: 2013-05-24 10:56
  */
 public class JdbcUtils {
     private static final Map<Class<?>, ColumnHandler<?>> handlers = new HashMap<Class<?>, ColumnHandler<?>>();

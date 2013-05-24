@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class RelationCriteriaTranslater implements SqlCriteriaTranslater<RelationCriteria> {
     @Override
-    public String translate(RelationCriteria criteria) throws Exception {
+    public String translate(RelationCriteria criteria, JdbcParamterHolder jph) throws Exception {
         List<Criteria> criterias = criteria.getCriterias();
         Relation relation = criteria.getRelation();
         String relationStr = "";
@@ -34,7 +34,7 @@ public class RelationCriteriaTranslater implements SqlCriteriaTranslater<Relatio
             }                 else{
                 sb.append(' ').append(relationStr).append(' ');
             }
-            sb.append(SqlCriteriaTranslaters.toWhereSql(c));
+            sb.append(SqlCriteriaTranslaters.toWhereSql(c, jph));
         }
         return sb.toString();
     }

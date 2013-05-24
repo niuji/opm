@@ -7,5 +7,5 @@ import org.fl.opm.spec.criteria.Criteria;
  * Date: 2013-05-23 13:15
  */
 public interface SqlCriteriaTranslater<T extends Criteria> {
-    public String translate(T criteria) throws Exception;
+    public String translate(T criteria, JdbcParamterHolder jph) throws Exception;
 }
