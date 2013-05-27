@@ -3,13 +3,14 @@ package org.fl.opm.jdbc.util;
 import org.fl.opm.jdbc.ColumnHandler;
 import org.fl.opm.jdbc.FieldWrapper;
 import org.fl.opm.jdbc.handler.*;
+import org.fl.opm.spec.jdbc.SqlDialect;
+import org.fl.opm.spec.jdbc.dialect.OracleDialect;
+import org.fl.opm.spec.jdbc.dialect.SqlServerDialect;
 import org.fl.opm.util.CastUtils;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,4 +93,25 @@ public class JdbcUtils {
         handlers.put(String.class, new StringHandler());
     }
 
+    public static SqlDialect getDialect(DataSource dataSource) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            String dbInfo = conn.getMetaData().getDatabaseProductName().toUpperCase();
+            if(dbInfo.indexOf("ORACLE") >= 0){
+                return OracleDialect.getSharedInstance();
+            } else if(dbInfo.indexOf("SQL SERVER")>= 0){
+                return SqlServerDialect.getSharedInstance();
+            }
+        } catch (SQLException e) {
+        } finally {
+            if(conn != null){
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return null;
+    }
 }

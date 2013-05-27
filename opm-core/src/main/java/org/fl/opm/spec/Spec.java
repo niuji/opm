@@ -26,7 +26,7 @@ public abstract class Spec<T> {
      * @param name
      * @return
      */
-    public Spec<T> asc(String name){
+    public Spec<T> asc(String name) throws Exception {
         ensureSort();
         sort.add(name, Sort.ASC);
         return this;
@@ -37,7 +37,7 @@ public abstract class Spec<T> {
      * @param name
      * @return
      */
-    public Spec<T> desc(String name){
+    public Spec<T> desc(String name) throws Exception {
         ensureSort();
         sort.add(name, Sort.DESC);
         return this;
@@ -50,7 +50,7 @@ public abstract class Spec<T> {
      */
     public Spec<T> limit(Page page){
         limit = new Limit();
-        limit.setStart(page.getPage() * page.getPageSize());
+        limit.setStart((page.getPage() - 1) * page.getPageSize() + 1);
         limit.setEnd(limit.getStart() + page.getPageSize());
         return this;
     }
@@ -68,4 +68,5 @@ public abstract class Spec<T> {
             sort = new Sort();
         }
     }
+
 }

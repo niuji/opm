@@ -109,7 +109,7 @@ public class SqlPersistenceManager implements PersistenceManager {
     public List findBySpec(Spec spec) throws Exception {
         notNull(spec, "Spec can not be null.");
         SqlSpec s = (SqlSpec) spec;
-        JdbcParamterHolder jph = s.getJdbcParamter(null);
+        JdbcParamterHolder jph = s.getJdbcParamter(sqlExecutor.getDialect());
         if (s.isSelectByModel()) {
             return sqlExecutor.findBySql(jph.getSql(), jph.getParamArray(), jph.getTypeArray(), s.getModelClass());
         } else {

@@ -10,10 +10,10 @@ import java.util.List;
  * Time: 下午2:16
  * To change this template use File | Settings | File Templates.
  */
-public class Page<T> implements Serializable {
+public class Page implements Serializable {
     public static final int DEFAULT_PAGE_SIZE = 10;
 
-    private List<T> results = null;
+    private List results = null;
 
     private int pageSize = DEFAULT_PAGE_SIZE;
 
@@ -21,11 +21,11 @@ public class Page<T> implements Serializable {
 
     private int total = 0;
 
-    public List<T> getResults() {
+    public List getResults() {
         return results;
     }
 
-    public void setResults(List<T> results) {
+    public void setResults(List results) {
         this.results = results;
     }
 

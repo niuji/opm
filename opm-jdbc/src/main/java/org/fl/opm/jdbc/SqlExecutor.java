@@ -1,14 +1,14 @@
 package org.fl.opm.jdbc;
 
+import org.fl.opm.spec.jdbc.SqlDialect;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: jiangyixin.stephen
- * Date: 13-5-3
- * Time: 下午4:57
- * To change this template use File | Settings | File Templates.
+ * Date: 2013-05-27 10:44
  */
 public interface SqlExecutor {
     Map<String, Object> insert(String sql, List<FieldWrapper> params, List<String> primaryKeys) throws Exception;
@@ -22,4 +22,6 @@ public interface SqlExecutor {
     <T> List<T> findBySql(String sql, Object[] params, int[] types, Class<T> modelClass) throws Exception;
 
     List<Object[]> findBySql(String sql, Object[] params, int[] types) throws Exception;
+
+    SqlDialect getDialect();
 }

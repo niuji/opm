@@ -6,11 +6,9 @@ import javax.persistence.Column;
 import java.lang.reflect.Field;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: jiangyixin.stephen
- * Date: 13-5-4
- * Time: 下午1:34
- * To change this template use File | Settings | File Templates.
+ * Date: 2013-05-27 15:23
  */
 public class DbNameUtils {
     public static String getColName(Field col) {

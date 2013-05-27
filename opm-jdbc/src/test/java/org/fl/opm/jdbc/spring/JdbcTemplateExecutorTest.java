@@ -1,5 +1,6 @@
 package org.fl.opm.jdbc.spring;
 
+import org.fl.opm.Page;
 import org.fl.opm.PersistenceManager;
 import org.fl.opm.spec.jdbc.SqlSpec;
 import org.junit.BeforeClass;
@@ -92,7 +93,15 @@ public class JdbcTemplateExecutorTest {
     @Test
     public void findBySpecTest() throws Exception {
         PersistenceManager pm = ctx.getBean("sqlServerPersistenceManager", PersistenceManager.class);
-        List<Object> list = SqlSpec.from(MerchantContractfee.class).where().eq("maxvalue", new BigDecimal(10)).asc("createTime").list(pm);
+        Page page = new Page();
+        page.setPage(2);
+        page.setPageSize(40);
+        List<Object> list = SqlSpec.from(MerchantContractfee.class).where().eq("maxvalue", new BigDecimal(10)).asc("createtime").limit(page).list(pm);
+        assertThat(list.size() > 0, is(true));
+        pm = ctx.getBean("oraclePersistenceManager", PersistenceManager.class);
+        page.setPage(2);
+        page.setPageSize(70);
+        list = SqlSpec.from(MessageContent.class).where().gt("id", 213000).asc("id").limit(page).list(pm);
         assertThat(list.size() > 0, is(true));
     }
 }

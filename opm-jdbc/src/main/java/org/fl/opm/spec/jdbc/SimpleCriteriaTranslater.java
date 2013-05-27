@@ -20,6 +20,14 @@ public class SimpleCriteriaTranslater implements SqlCriteriaTranslater<SimpleCri
                 return " = ? ";
             case ISNULL:
                 return " is null ";
+            case GT:
+                return " > ? ";
+            case LT:
+                return " < ? ";
+            case GE:
+                return " >= ? ";
+            case LE:
+                return " <= ? ";
             default:
                 throw new Exception("Symbol " + symbol.name() + " is not supported.");
         }

@@ -38,7 +38,7 @@ public class SqlSpec<T> extends Spec<T> {
         return this;
     }
 
-    public SqlSpec<T> select(String select){
+    public SqlSpec<T> select(String select) {
         this.selectCol = select;
         //TODO: 增加列名解析功能
         return this;
@@ -54,8 +54,7 @@ public class SqlSpec<T> extends Spec<T> {
      */
     public SqlSpec<T> eq(String fieldName, Object val) throws Exception {
         if (val != null) {
-            ModelJdbcMetaInfo metaInfo = MetaInfoHolder.getMetaInfo(modelClass);
-            Field field = (Field) metaInfo.getFieldMapping().get(fieldName);
+            Field field = getField(fieldName);
             criteria.and(DbNameUtils.getColName(field), Symbol.EQUAL, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
         }
         return this;
@@ -71,8 +70,7 @@ public class SqlSpec<T> extends Spec<T> {
      */
     public SqlSpec<T> eqNullable(String fieldName, Object val) throws Exception {
         if (val == null) {
-            ModelJdbcMetaInfo metaInfo = MetaInfoHolder.getMetaInfo(modelClass);
-            Field field = (Field) metaInfo.getFieldMapping().get(fieldName);
+            Field field = getAndEnsureField(fieldName);
             criteria.and(DbNameUtils.getColName(field), Symbol.ISNULL, null, null);
             return this;
         } else {
@@ -81,7 +79,68 @@ public class SqlSpec<T> extends Spec<T> {
     }
 
     /**
+     * 大于
+     * @param fieldName
+     * @param val
+     * @return
+     * @throws Exception
+     */
+    public Spec gt(String fieldName, Object val) throws Exception {
+        if (val != null) {
+            Field field = getAndEnsureField(fieldName);
+            criteria.and(DbNameUtils.getColName(field), Symbol.GT, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
+        }
+        return this;
+    }
+
+    /**
+     * 大于等于
+     * @param fieldName
+     * @param val
+     * @return
+     * @throws Exception
+     */
+    public Spec ge(String fieldName, Object val) throws Exception {
+        if (val != null) {
+            Field field = getAndEnsureField(fieldName);
+            criteria.and(DbNameUtils.getColName(field), Symbol.GE, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
+        }
+        return this;
+    }
+
+    /**
+     * 小于
+     * @param fieldName
+     * @param val
+     * @return
+     * @throws Exception
+     */
+    public Spec lt(String fieldName, Object val) throws Exception {
+        if (val != null) {
+            Field field = getAndEnsureField(fieldName);
+            criteria.and(DbNameUtils.getColName(field), Symbol.LT, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
+        }
+        return this;
+    }
+
+    /**
+     * 小于等于
+     * @param fieldName
+     * @param val
+     * @return
+     * @throws Exception
+     */
+    public Spec le(String fieldName, Object val) throws Exception {
+        if (val != null) {
+            Field field = getAndEnsureField(fieldName);
+            criteria.and(DbNameUtils.getColName(field), Symbol.LE, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
+        }
+        return this;
+    }
+
+    /**
      * 将criteria转换成执行jdbc必须的参数：sql, parameters, jdbc types
+     *
      * @param dialet
      * @return
      * @throws Exception
@@ -98,18 +157,33 @@ public class SqlSpec<T> extends Spec<T> {
         if (!criteria.isEmpty()) {
             sb.append(" where ").append(SqlCriteriaTranslaters.toWhereSql(criteria.getRoot(), jph));
         }
-        if (limit != null) {
-            sb = new StringBuilder(dialet.rangedSql(sb.toString(), limit.getStart(), limit.getEnd() - limit.getStart()));
-        }
         if (sort != null && CollectionUtils.isNotEmpty(sort.getSortDefinitions())) {
             sb.append(" order by ").append(generateOrderBySql(sort));
+        }
+        if (limit != null) {
+            if (dialet == null) {
+                throw new Exception("Sql dialect can't be null.");
+            }
+            sb = new StringBuilder(dialet.rangedSql(sb.toString(), limit.getStart(), limit.getEnd() - limit.getStart()));
         }
         jph.setSql(sb.toString());
         return jph;
     }
 
-    public boolean isSelectByModel(){
+    public boolean isSelectByModel() {
         return selectCol == null;
+    }
+
+    @Override
+    public Spec<T> asc(String fieldName) throws Exception {
+        Field field = getAndEnsureField(fieldName);
+        return super.asc(DbNameUtils.getColName(field));
+    }
+
+    @Override
+    public Spec<T> desc(String fieldName) throws Exception {
+        Field field = getAndEnsureField(fieldName);
+        return super.asc(DbNameUtils.getColName(field));
     }
 
     private String generateOrderBySql(Sort sort) {
@@ -125,6 +199,19 @@ public class SqlSpec<T> extends Spec<T> {
             sb.append(sd.getName()).append(' ').append(sd.getOrder());
         }
         return sb.toString();
+    }
+
+    private Field getField(String fieldName) throws Exception {
+        ModelJdbcMetaInfo metaInfo = MetaInfoHolder.getMetaInfo(modelClass);
+        return (Field) metaInfo.getFieldMapping().get(fieldName);
+    }
+
+    private Field getAndEnsureField(String fieldName) throws Exception {
+        Field field = getField(fieldName);
+        if (field == null) {
+            throw new Exception("Can not find column field with name '" + fieldName + "'.");
+        }
+        return field;
     }
 
 }

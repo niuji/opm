@@ -3,6 +3,7 @@ package org.fl.opm.jdbc.spring;
 import org.fl.opm.jdbc.FieldWrapper;
 import org.fl.opm.jdbc.SqlExecutor;
 import org.fl.opm.jdbc.util.JdbcUtils;
+import org.fl.opm.spec.jdbc.SqlDialect;
 import org.fl.opm.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,11 @@ import java.util.Map;
 public class JdbcTemplateExecutor implements SqlExecutor {
     private static Logger logger = LoggerFactory.getLogger(JdbcTemplateExecutor.class);
     private JdbcTemplate jdbcTemplate;
+    private SqlDialect dialect;
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.dialect = JdbcUtils.getDialect(dataSource);
     }
 
     @Override
@@ -116,6 +119,11 @@ public class JdbcTemplateExecutor implements SqlExecutor {
                 }
             }
         });
+    }
+
+    @Override
+    public SqlDialect getDialect() {
+        return dialect;
     }
 
     private Object[] toArgs(Object param) {
