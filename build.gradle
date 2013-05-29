@@ -56,15 +56,13 @@ subprojects {
 
     uploadArchives {
         repositories.mavenDeployer {
-            repository(url: "http://nexus.shengpaydev.com/content/repositories/snapshots/") {
+            snapshotRepository(url: "http://nexus.shengpaydev.com/content/repositories/snapshots/") {
+                authentication(userName: "dev", password: "sdpdev")
+            }
+            repository(url: "http://nexus.shengpaydev.com/content/repositories/releases/") {
                 authentication(userName: "dev", password: "sdpdev")
             }
         }
     }
 
-    gradle.taskGraph.whenReady {taskGraph ->
-        if (taskGraph.hasTask(release)) {
-            uploadArchives.repositories.mavenDeployer.repository.url = "http://nexus.shengpaydev.com/content/repositories/releases/"
-        }
-    }
 }
