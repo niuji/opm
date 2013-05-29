@@ -11,13 +11,3 @@ dependencies {
 //    providedCompile 'org.springframework:spring-context:3.2.2.RELEASE'
 //    providedCompile 'org.springframework:spring-jdbc:3.2.2.RELEASE'
 }
-
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: "http://nexus.shengpaydev.com/content/repositories/snapshots/") {
-            authentication(userName: "dev", password: "sdpdev")
-            //pom.groupId = 'org.fl.opm'
-            //pom.artifactId = 'opm-jdbc'
-        }
-    }
-}

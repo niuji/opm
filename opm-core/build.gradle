@@ -1,7 +1,0 @@
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: "http://nexus.shengpaydev.com/content/repositories/snapshots/") {
-            authentication(userName: "dev", password: "sdpdev")
-        }
-    }
-}

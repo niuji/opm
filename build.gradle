@@ -1,11 +1,19 @@
 allprojects {
     apply plugin: 'maven'
     group = 'org.fl.opm'
-    version = '1.0.5-SNAPSHOT'
+    version = '1.0.6'
 
     task deploy(dependsOn: 'uploadArchives') {
     }
 
+    task release(dependsOn: 'deploy') {
+    }
+
+    gradle.taskGraph.whenReady {taskGraph ->
+        if (!taskGraph.hasTask(release)) {
+            version += '-SNAPSHOT'
+        }
+    }
 }
 
 subprojects {
@@ -44,5 +52,19 @@ subprojects {
 
     artifacts {
         archives srcJar
+    }
+
+    uploadArchives {
+        repositories.mavenDeployer {
+            repository(url: "http://nexus.shengpaydev.com/content/repositories/snapshots/") {
+                authentication(userName: "dev", password: "sdpdev")
+            }
+        }
+    }
+
+    gradle.taskGraph.whenReady {taskGraph ->
+        if (taskGraph.hasTask(release)) {
+            uploadArchives.repositories.mavenDeployer.repository.url = "http://nexus.shengpaydev.com/content/repositories/releases/"
+        }
     }
 }
