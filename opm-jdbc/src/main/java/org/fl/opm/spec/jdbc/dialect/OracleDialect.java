@@ -14,7 +14,7 @@ public class OracleDialect implements SqlDialect {
     }
 
     @Override
-    public String rangedSql(String original, int start, int limit) {
-        return "select * from (select rownum as rn, t.* from (" + original + ") t where rownum < " + (start + limit) + ") o where o.rn>=" + start;
+    public String rangedSql(String original, String selCol, int start, int limit) {
+        return "select " + selCol + " from (select rownum as rn, t.* from (" + original + ") t where rownum < " + (start + limit) + ") o where o.rn>=" + start;
     }
 }

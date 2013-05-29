@@ -9,6 +9,7 @@ import org.fl.opm.spec.SortDefinition;
 import org.fl.opm.spec.Spec;
 import org.fl.opm.spec.criteria.Criteria;
 import org.fl.opm.spec.enums.Symbol;
+import org.fl.opm.spec.jdbc.criteria.NamedSqlCriteria;
 import org.fl.opm.util.CollectionUtils;
 import org.fl.opm.util.StringUtils;
 
@@ -35,6 +36,24 @@ public class SqlSpec<T> extends Spec<T> {
             throw new Exception("criteria already initialized.");
         }
         criteria = Criteria.emptyCriteria();
+        return this;
+    }
+
+    public SqlSpec<T> where(String sql) throws Exception {
+        if (criteria != null) {
+            throw new Exception("criteria already initialized.");
+        }
+        criteria = new NamedSqlCriteria(sql);
+        return this;
+    }
+
+    public SqlSpec<T> addParameter(String name, Object value) throws Exception {
+        if (criteria instanceof NamedSqlCriteria) {
+            NamedSqlCriteria c = (NamedSqlCriteria) criteria;
+            c.addParam(name, value);
+        } else {
+            throw new Exception("Spec is not in named sql model.");
+        }
         return this;
     }
 
@@ -80,12 +99,13 @@ public class SqlSpec<T> extends Spec<T> {
 
     /**
      * 大于
+     *
      * @param fieldName
      * @param val
      * @return
      * @throws Exception
      */
-    public Spec gt(String fieldName, Object val) throws Exception {
+    public SqlSpec<T> gt(String fieldName, Object val) throws Exception {
         if (val != null) {
             Field field = getAndEnsureField(fieldName);
             criteria.and(DbNameUtils.getColName(field), Symbol.GT, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
@@ -95,12 +115,13 @@ public class SqlSpec<T> extends Spec<T> {
 
     /**
      * 大于等于
+     *
      * @param fieldName
      * @param val
      * @return
      * @throws Exception
      */
-    public Spec ge(String fieldName, Object val) throws Exception {
+    public SqlSpec<T> ge(String fieldName, Object val) throws Exception {
         if (val != null) {
             Field field = getAndEnsureField(fieldName);
             criteria.and(DbNameUtils.getColName(field), Symbol.GE, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
@@ -110,12 +131,13 @@ public class SqlSpec<T> extends Spec<T> {
 
     /**
      * 小于
+     *
      * @param fieldName
      * @param val
      * @return
      * @throws Exception
      */
-    public Spec lt(String fieldName, Object val) throws Exception {
+    public SqlSpec<T> lt(String fieldName, Object val) throws Exception {
         if (val != null) {
             Field field = getAndEnsureField(fieldName);
             criteria.and(DbNameUtils.getColName(field), Symbol.LT, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
@@ -125,12 +147,13 @@ public class SqlSpec<T> extends Spec<T> {
 
     /**
      * 小于等于
+     *
      * @param fieldName
      * @param val
      * @return
      * @throws Exception
      */
-    public Spec le(String fieldName, Object val) throws Exception {
+    public SqlSpec<T> le(String fieldName, Object val) throws Exception {
         if (val != null) {
             Field field = getAndEnsureField(fieldName);
             criteria.and(DbNameUtils.getColName(field), Symbol.LE, val, JdbcUtils.javaTypeToJdbcType(field.getType()));
@@ -147,15 +170,12 @@ public class SqlSpec<T> extends Spec<T> {
      */
     public JdbcParamterHolder getJdbcParamter(SqlDialect dialet) throws Exception {
         JdbcParamterHolder jph = new JdbcParamterHolder();
+        String selCol = StringUtils.isNotBlank(this.selectCol) ? this.selectCol : "*";
         StringBuilder sb = new StringBuilder("select ");
-        if (StringUtils.isNotBlank(selectCol)) {
-            sb.append(selectCol);
-        } else {
-            sb.append("*");
-        }
+        sb.append(selCol);
         sb.append(" from ").append(MetaInfoHolder.getMetaInfo(modelClass).getTableName());
-        if (!criteria.isEmpty()) {
-            sb.append(" where ").append(SqlCriteriaTranslaters.toWhereSql(criteria.getRoot(), jph));
+        if (criteria != null) {
+            sb.append(" where ").append(SqlCriteriaTranslaters.toWhereSql(criteria, jph));
         }
         if (sort != null && CollectionUtils.isNotEmpty(sort.getSortDefinitions())) {
             sb.append(" order by ").append(generateOrderBySql(sort));
@@ -164,7 +184,7 @@ public class SqlSpec<T> extends Spec<T> {
             if (dialet == null) {
                 throw new Exception("Sql dialect can't be null.");
             }
-            sb = new StringBuilder(dialet.rangedSql(sb.toString(), limit.getStart(), limit.getEnd() - limit.getStart()));
+            sb = new StringBuilder(dialet.rangedSql(sb.toString(), selCol, limit.getStart(), limit.getEnd() - limit.getStart()));
         }
         jph.setSql(sb.toString());
         return jph;

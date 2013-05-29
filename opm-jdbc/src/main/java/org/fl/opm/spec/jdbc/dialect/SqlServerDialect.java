@@ -17,7 +17,7 @@ public class SqlServerDialect implements SqlDialect {
     }
 
     @Override
-    public String rangedSql(String original, int start, int limit) {
+    public String rangedSql(String original, String selCol, int start, int limit) {
         StringBuilder sb = new StringBuilder(original.trim().toUpperCase());
 
         int orderByIndex = sb.indexOf("ORDER BY");
@@ -29,7 +29,7 @@ public class SqlServerDialect implements SqlDialect {
         }
         insertRowNumberFunction(sb, orderby);
 
-        sb.insert(0, SELECT + " " + TOP + limit + " * " + FROM + "(");
+        sb.insert(0, SELECT + " " + TOP + limit + " " + selCol + " " + FROM + "(");
         sb.append(")").append(" QUERY_TEMP_").append(" WHERE RowNumber >= ").append(start);
         return sb.toString();
     }

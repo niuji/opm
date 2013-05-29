@@ -7,8 +7,10 @@ package org.fl.opm.spec.jdbc;
 public interface SqlDialect {
     /**
      * 将原始SQL转成分页查询SQL
+     *
      * @param original
+     * @param selCol
      * @return
      */
-    public String rangedSql(String original, int start, int limit);
+    public String rangedSql(String original, String selCol, int start, int limit);
 }

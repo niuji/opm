@@ -10,7 +10,7 @@ public class Criteria {
 
     private Criteria root;
 
-    Criteria(){
+    protected Criteria(){
     }
 
     public static Criteria emptyCriteria() {

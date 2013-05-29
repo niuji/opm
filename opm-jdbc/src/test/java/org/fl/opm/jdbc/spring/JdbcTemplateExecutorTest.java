@@ -96,12 +96,18 @@ public class JdbcTemplateExecutorTest {
         Page page = new Page();
         page.setPage(2);
         page.setPageSize(40);
-        List<Object> list = SqlSpec.from(MerchantContractfee.class).where().eq("maxvalue", new BigDecimal(10)).asc("createtime").limit(page).list(pm);
+        List<Object> list = SqlSpec.from(MerchantContractfee.class).where().eq("maxvalue", new BigDecimal(10)).select("maxvalue").asc("createtime").limit(page).list(pm);
         assertThat(list.size() > 0, is(true));
+
+        page.setPageSize(30);
+        list = SqlSpec.from(MerchantContractfee.class).where("feevalue = :feevalue").addParameter("feevalue", new BigDecimal("0.0050")).select("maxvalue").asc("createtime").limit(page).list(pm);
+        assertThat(list.size() > 0, is(true));
+
         pm = ctx.getBean("oraclePersistenceManager", PersistenceManager.class);
         page.setPage(2);
-        page.setPageSize(70);
-        list = SqlSpec.from(MessageContent.class).where().gt("id", 213000).asc("id").limit(page).list(pm);
+        page.setPageSize(100);
+        list = SqlSpec.from(MessageContent.class).where().gt("id", 213000).select("msg_content, oid").asc("id").limit(page).list(pm);
         assertThat(list.size() > 0, is(true));
+
     }
 }

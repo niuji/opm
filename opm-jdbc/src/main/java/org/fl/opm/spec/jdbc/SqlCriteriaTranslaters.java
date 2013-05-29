@@ -3,6 +3,7 @@ package org.fl.opm.spec.jdbc;
 import org.fl.opm.spec.criteria.Criteria;
 import org.fl.opm.spec.criteria.RelationCriteria;
 import org.fl.opm.spec.criteria.SimpleCriteria;
+import org.fl.opm.spec.jdbc.criteria.NamedSqlCriteria;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class SqlCriteriaTranslaters {
     private static Map<Class<? extends Criteria>, SqlCriteriaTranslater> translaterMap = new HashMap<Class<? extends Criteria>, SqlCriteriaTranslater>();
     public static String toWhereSql(Criteria criteria, JdbcParamterHolder jph) throws Exception {
-        if(criteria == null || criteria.isEmpty()){
+        if(criteria == null){
             return "";
         }else{
             return getSqlCriteriaTranslater(criteria).translate(criteria, jph);
@@ -33,6 +34,7 @@ public class SqlCriteriaTranslaters {
     static {
         translaterMap.put(RelationCriteria.class, new RelationCriteriaTranslater());
         translaterMap.put(SimpleCriteria.class, new SimpleCriteriaTranslater());
+        translaterMap.put(NamedSqlCriteria.class, new NamedSqlCriteriaTranslater());
         translaterMap.put(Criteria.class, new CriteriaTranslater());
     }
 }
