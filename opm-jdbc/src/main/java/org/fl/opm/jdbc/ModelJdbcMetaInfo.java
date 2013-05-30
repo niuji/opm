@@ -158,7 +158,7 @@ public class ModelJdbcMetaInfo<T> {
         if (table != null && StringUtils.isNotBlank(table.name())) {
             return table.name();
         } else {
-            return DbNameUtils.toDbName(modelClass.getSimpleName());
+            return DbNameUtils.toDbName(entityClass.getSimpleName());
         }
     }
 
