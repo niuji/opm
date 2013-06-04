@@ -99,8 +99,9 @@ public class JdbcTemplateExecutorTest {
         List<Object> list = SqlSpec.from(MerchantContractfee.class).where().eq("maxvalue", new BigDecimal(10)).select("maxvalue").asc("createtime").limit(page).list(pm);
         assertThat(list.size() > 0, is(true));
 
+        page.setPage(1);
         page.setPageSize(30);
-        list = SqlSpec.from(MerchantContractfee.class).where("feevalue = :feevalue").addParameter("feevalue", new BigDecimal("0.0050")).select("maxvalue").asc("createtime").limit(page).list(pm);
+        list = SqlSpec.from(MerchantContractfee.class).where("feevalue = :feevalue").addParameter("feevalue", new BigDecimal("0.0050")).eq("maxvalue", new BigDecimal(1000)).eq("feetype", 4).asc("createtime").limit(page).list(pm);
         assertThat(list.size() > 0, is(true));
 
         pm = ctx.getBean("oraclePersistenceManager", PersistenceManager.class);

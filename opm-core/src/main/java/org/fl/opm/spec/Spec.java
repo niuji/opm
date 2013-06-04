@@ -55,7 +55,7 @@ public abstract class Spec<T> {
         return this;
     }
 
-    public List<Object> list(PersistenceManager pm) throws Exception {
+    public List list(PersistenceManager pm) throws Exception {
         return pm.findBySpec(this);
     }
 

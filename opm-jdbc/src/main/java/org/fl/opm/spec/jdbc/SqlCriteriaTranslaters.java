@@ -4,6 +4,7 @@ import org.fl.opm.spec.criteria.Criteria;
 import org.fl.opm.spec.criteria.RelationCriteria;
 import org.fl.opm.spec.criteria.SimpleCriteria;
 import org.fl.opm.spec.jdbc.criteria.NamedSqlCriteria;
+import org.fl.opm.spec.jdbc.criteria.translater.*;
 
 import java.util.HashMap;
 import java.util.Map;

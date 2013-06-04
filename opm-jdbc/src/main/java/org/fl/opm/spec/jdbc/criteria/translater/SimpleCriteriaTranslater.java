@@ -1,7 +1,8 @@
-package org.fl.opm.spec.jdbc;
+package org.fl.opm.spec.jdbc.criteria.translater;
 
 import org.fl.opm.spec.criteria.SimpleCriteria;
 import org.fl.opm.spec.enums.Symbol;
+import org.fl.opm.spec.jdbc.JdbcParamterHolder;
 
 /**
  * User: jiangyixin.stephen

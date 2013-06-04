@@ -46,7 +46,7 @@ public interface PersistenceManager {
      * @return
      * @throws Exception
      */
-    public List<Object> findBySpec(Spec spec) throws Exception;
+    public List findBySpec(Spec spec) throws Exception;
 
     /**
      * 根据指定条件更新

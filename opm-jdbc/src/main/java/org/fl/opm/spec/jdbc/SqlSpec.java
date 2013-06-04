@@ -15,6 +15,7 @@ import org.fl.opm.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * User: jiangyixin.stephen
@@ -173,14 +174,15 @@ public class SqlSpec<T> extends Spec<T> {
         String selCol = StringUtils.isNotBlank(this.selectCol) ? this.selectCol : "*";
         StringBuilder sb = new StringBuilder("select ");
         sb.append(selCol);
+        boolean countSelect = Pattern.matches("\\s*count\\(\\*\\)[^,]*", selCol);
         sb.append(" from ").append(MetaInfoHolder.getMetaInfo(modelClass).getTableName());
         if (criteria != null) {
             sb.append(" where ").append(SqlCriteriaTranslaters.toWhereSql(criteria, jph));
         }
-        if (sort != null && CollectionUtils.isNotEmpty(sort.getSortDefinitions())) {
+        if (!countSelect && sort != null && CollectionUtils.isNotEmpty(sort.getSortDefinitions())) {
             sb.append(" order by ").append(generateOrderBySql(sort));
         }
-        if (limit != null) {
+        if (!countSelect && limit != null) {
             if (dialet == null) {
                 throw new Exception("Sql dialect can't be null.");
             }

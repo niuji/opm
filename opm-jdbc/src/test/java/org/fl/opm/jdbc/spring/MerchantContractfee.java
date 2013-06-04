@@ -13,8 +13,8 @@ import java.util.Date;
  */
 @Entity
 public class MerchantContractfee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rowid;
 
     @Column

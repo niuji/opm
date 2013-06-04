@@ -1,5 +1,7 @@
-package org.fl.opm.spec.jdbc;
+package org.fl.opm.spec.jdbc.criteria.translater;
 
+import org.fl.opm.spec.jdbc.JdbcParamterHolder;
+import org.fl.opm.spec.jdbc.SqlCriteriaTranslaters;
 import org.fl.opm.spec.jdbc.criteria.NamedSqlCriteria;
 import org.fl.opm.spec.jdbc.criteria.ParamPair;
 
@@ -11,11 +13,11 @@ public class NamedSqlCriteriaTranslater implements SqlCriteriaTranslater<NamedSq
     @Override
     public String translate(NamedSqlCriteria criteria, JdbcParamterHolder jph) throws Exception {
         for (ParamPair pair : criteria.getParamPairs()) {
-            if(pair == null){
+            if (pair == null) {
                 throw new Exception("Parameter for named sql can not be null.");
             }
             jph.addParam(pair.getVal(), pair.getJdbcType());
         }
-        return criteria.getSql();
+        return criteria.getSql() + ((criteria.isEmpty()) ? "" : " and " + SqlCriteriaTranslaters.toWhereSql(criteria.getRoot(), jph));
     }
 }
